@@ -15,6 +15,7 @@ namespace Buhta
         public void SendBindedValueChanged(string modelBindingID, string propertyName, string newValue)
         {
             var obj = App.BindingModelList[modelBindingID];
+            obj.ClientsCaller.Add(Clients.Caller); ? здесь продолжаем
 
             //Type type = obj.GetType();
             //PropertyInfo prop =   type.GetProperty(propertyName);
@@ -28,6 +29,7 @@ namespace Buhta
         public void SendEvent(string modelBindingID, string funcName, dynamic args)
         {
             var obj = App.BindingModelList[modelBindingID];
+            obj.ClientsCaller.Add(Clients.Caller);
             obj.InvokeMethod(funcName, args);
 
             //Type type = obj.GetType();
@@ -39,6 +41,7 @@ namespace Buhta
         public void SubscribeBindedValueChanged(string modelBindingID, string propertyName)
         {
             BaseModel obj = App.BindingModelList[modelBindingID];
+            obj.ClientsCaller.Add(Clients.Caller);
             var _obj =obj.GetPropertyObject(propertyName);
             var lastName = propertyName.Split('.').Last();
             _obj.OnChange += (sender, propName, newValue) =>

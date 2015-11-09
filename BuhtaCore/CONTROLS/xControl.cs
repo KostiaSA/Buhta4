@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.UI;
 
 namespace Buhta
 {
@@ -97,7 +98,12 @@ namespace Buhta
         {
             if (modelPropertyName != null)
             {
-                script.AppendLine("tag." + GetJqxName() + "({" + jqxPropertyName + ":"+ Settings.Model.GetPropertyValue(modelPropertyName).AsJavaScript() + "});");
+                
+                if (!Settings.Model.BindedProps.ContainsKey(modelPropertyName))
+                {
+                    Settings.Model.BindedProps.Add(modelPropertyName, Settings.Model.GetPropertyValue(modelPropertyName).AsJavaScript());
+                }
+                script.AppendLine("tag." + GetJqxName() + "({" + jqxPropertyName + ":"+ Settings.Model.BindedProps[modelPropertyName] + "});");
                 script.AppendLine("signalr.subscribeModelPropertyChanged('" + Settings.Model.BindingId + "', '" + modelPropertyName + "',function(newValue){");
                 script.AppendLine("    tag." + GetJqxName() + "({" + jqxPropertyName + ":newValue});");
                 script.AppendLine("});");
@@ -109,7 +115,12 @@ namespace Buhta
         {
             if (modelPropertyName != null)
             {
-                script.AppendLine("tag." + jqxMethodName + "(" +Settings.Model.GetPropertyValue(modelPropertyName).ToString().AsJavaScript() +");");
+                //var xx = DataBinder.Eval(Settings.Model, "Table.Name"); 
+                if (!Settings.Model.BindedProps.ContainsKey(modelPropertyName))
+                {
+                    Settings.Model.BindedProps.Add(modelPropertyName, Settings.Model.GetPropertyValue(modelPropertyName).AsJavaScript());
+                }
+                script.AppendLine("tag." + jqxMethodName + "(" + Settings.Model.BindedProps[modelPropertyName] + ");");
                 script.AppendLine("signalr.subscribeModelPropertyChanged('" + Settings.Model.BindingId + "', '" + modelPropertyName + "',function(newValue){");
                 script.AppendLine("    tag." + jqxMethodName + "(newValue);");
                 script.AppendLine("});");
