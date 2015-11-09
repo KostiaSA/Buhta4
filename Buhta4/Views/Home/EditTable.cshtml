@@ -11,7 +11,8 @@
 @Html.xButton(settings =>
 {
     settings.Model = Model;
-    settings.Text = "Сохранить таблу";
+    //settings.Text = "Сохранить таблу";
+    settings.BindTextTo = nameof(Model.SaveButtonText);
     settings.BindDisabledTo = nameof(Model.SaveButtonDisabled);
 })
 <br>

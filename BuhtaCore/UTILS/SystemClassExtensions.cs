@@ -494,6 +494,11 @@ namespace Buhta
         //        return Convert.ToBase64String(hash).Substring(1, 12).Replace("+", "-");
         //    }
 
+        public static string AsJavaScript(this string value)
+        {
+            return HttpUtility.JavaScriptStringEncode(value, true);
+        }
+
         public static string AsJavaScriptStringQuoted(this string value)
         {
             return HttpUtility.JavaScriptStringEncode(value, true);
@@ -601,6 +606,11 @@ namespace Buhta
             return "'" + value + "'";
         }
 
+        public static string AsJavaScript(this Guid value)
+        {
+            return "'" + value + "'";
+        }
+
         public static string AsSQL(this Guid? value)
         {
             if (value == null)
@@ -639,6 +649,10 @@ namespace Buhta
         {
             return value.ToString("0.###############");
         }
+        public static string AsJavaScript(this Double value)
+        {
+            return value.ToString("0.###############");
+        }
     }
 
     public static class ObjectExtensions
@@ -667,6 +681,30 @@ namespace Buhta
                 return ((bool)value) ? "1" : "0";
 
             throw new Exception("Object.AsSQL(): неизвестный класс '" + value.GetType().FullName + "'");
+        }
+
+        public static string AsJavaScript(this Object value)
+        {
+            if (value == null || value is DBNull)
+                return "null";
+            if (value is string)
+                return (value as string).AsJavaScript();
+            if (value is StringBuilder)
+                return (value as StringBuilder).ToString().AsJavaScript();
+            if (value is int)
+                return value.ToString();
+            if (value is Double)
+                return ((Double)value).AsJavaScript();
+            //if (value is DateTime)
+              //  return ((DateTime)value).AsSQL_DateAndTime();
+            if (value is Guid)
+                return ((Guid)value).AsJavaScript();
+            if (value is float)
+                return ((Double)value).AsJavaScript();
+            if (value is bool)
+                return ((bool)value) ? "true" : "false";
+
+            throw new Exception("Object."+nameof(AsJavaScript) +"(): неизвестный класс '" + value.GetType().FullName + "'");
         }
 
         public static byte[] AsSerializedImage(this Object value)

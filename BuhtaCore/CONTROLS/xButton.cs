@@ -25,9 +25,9 @@ namespace Buhta
     public class xButtonSettings : xControlSettings
     {
         public string Text;
-        public string BindTextTo;
         public int? Width = 150;
         public int? Height;
+        public string BindTextTo;
         public string BindOnClickTo;
         public string BindDisabledTo;
 
@@ -72,6 +72,8 @@ namespace Buhta
             EmitBindEvent(Script, Settings.BindOnClickTo, "click");
 
             EmitSubscribeModelPropertyChanged(Script, Settings.BindDisabledTo, "disabled");
+
+            EmitSubscribeModelPropertyChangedM(Script, Settings.BindTextTo, "val");
 
             Html.Append("<input type='button'  id='" + UniqueId + "'/>");
 

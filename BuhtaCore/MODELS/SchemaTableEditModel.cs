@@ -7,6 +7,11 @@ namespace Buhta
 {
     public class SchemaTableEditModel : BaseModel
     {
+        public SchemaTableEditModel()
+        {
+            SaveButtonText = "Сохранить таблицу?";
+        }
+
         public SchemaTable Table { get; set; }
 
         public void SaveButtonClick(dynamic args)
@@ -18,5 +23,8 @@ namespace Buhta
 
         [ChangeNotify]
         public bool SaveButtonDisabled { get; set; }
+
+        [ChangeNotify]
+        public string SaveButtonText { get; set; }
     }
 }

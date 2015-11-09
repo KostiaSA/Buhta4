@@ -49,17 +49,17 @@ namespace Buhta
             Script.AppendLine("tag." + GetJqxName() + "({});");
         }
 
-        public void EmitSetProperty(StringBuilder script, string jqxPropertyName, string value)
+        public void EmitSetProperty(StringBuilder script, string jqxPropertyName, object value)
         {
             if (value != null)
-                Script.AppendLine("tag." + GetJqxName() + "({"+ jqxPropertyName + ":" + value.AsJavaScriptStringQuoted() + "});");
+                Script.AppendLine("tag." + GetJqxName() + "({"+ jqxPropertyName + ":" + value.AsJavaScript() + "});");
         }
 
-        public void EmitSetProperty(StringBuilder script, string jqxPropertyName, int? value)
-        {
-            if (value != null)
-                Script.AppendLine("tag." + GetJqxName() + "({" + jqxPropertyName + ":" + value + "});");
-        }
+        //public void EmitSetProperty(StringBuilder script, string jqxPropertyName, int? value)
+        //{
+        //    if (value != null)
+        //        Script.AppendLine("tag." + GetJqxName() + "({" + jqxPropertyName + ":" + value + "});");
+        //}
 
         public void EmitSetPropertyPx(StringBuilder script, string jqxPropertyName, int? value)
         {
@@ -67,16 +67,16 @@ namespace Buhta
                 Script.AppendLine("tag." + GetJqxName() + "({" + jqxPropertyName + ":'" + value + "px'});");
         }
 
-        public void EmitSetPropertyM(StringBuilder script, string jqxMethodName, int? value)
-        {
-            if (value != null)
-                Script.AppendLine("tag." + jqxMethodName + "("+ value + ");");
-        }
+        //public void EmitSetPropertyM(StringBuilder script, string jqxMethodName, int? value)
+        //{
+        //    if (value != null)
+        //        Script.AppendLine("tag." + jqxMethodName + "("+ value + ");");
+        //}
 
-        public void EmitSetPropertyM(StringBuilder script, string jqxMethodName, string value)
+        public void EmitSetPropertyM(StringBuilder script, string jqxMethodName, object value)
         {
             if (value != null)
-                Script.AppendLine("tag." + jqxMethodName + "(" + value.AsJavaScriptStringQuoted() + ");");
+                Script.AppendLine("tag." + jqxMethodName + "(" + value.AsJavaScript() + ");");
         }
 
 
@@ -97,6 +97,7 @@ namespace Buhta
         {
             if (modelPropertyName != null)
             {
+                script.AppendLine("tag." + GetJqxName() + "({" + jqxPropertyName + ":"+ Settings.Model.GetPropertyValue(modelPropertyName).AsJavaScript() + "});");
                 script.AppendLine("signalr.subscribeModelPropertyChanged('" + Settings.Model.BindingId + "', '" + modelPropertyName + "',function(newValue){");
                 script.AppendLine("    tag." + GetJqxName() + "({" + jqxPropertyName + ":newValue});");
                 script.AppendLine("});");
@@ -108,8 +109,9 @@ namespace Buhta
         {
             if (modelPropertyName != null)
             {
+                script.AppendLine("tag." + jqxMethodName + "(" +Settings.Model.GetPropertyValue(modelPropertyName).ToString().AsJavaScript() +");");
                 script.AppendLine("signalr.subscribeModelPropertyChanged('" + Settings.Model.BindingId + "', '" + modelPropertyName + "',function(newValue){");
-                script.AppendLine("    tag." + GetJqxName() + "({" + jqxMethodName + ":newValue});");
+                script.AppendLine("    tag." + jqxMethodName + "(newValue);");
                 script.AppendLine("});");
             }
 
