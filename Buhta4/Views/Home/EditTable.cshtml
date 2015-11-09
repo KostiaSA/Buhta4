@@ -1,0 +1,67 @@
+﻿
+@model SchemaTableEditModel
+
+@{
+    ViewBag.Title = "EditTable";
+}
+
+<h2>EditTable @Model.Table.Name</h2>
+
+
+@Html.xButton(settings =>
+{
+    settings.Model = Model;
+    settings.Text = "Сохранить таблу";
+    settings.BindDisabledTo = nameof(Model.SaveButtonDisabled);
+})
+<br>
+@Html.xButton(settings =>
+{
+    settings.Model = Model;
+    settings.Text = "Жопа баттон 2";
+    settings.Width = 200;
+    settings.BindOnClickTo = "Table.Click33";
+    settings.BindDisabledTo = nameof(Model.SaveButtonDisabled);
+})
+<br>
+@Html.xButton(settings =>
+{
+    settings.Model = Model;
+    settings.Text = "Жопа баттон 3";
+    settings.BindOnClickTo = "SaveButtonClick";
+})
+<br>
+
+@*@Html.xInput(settings =>
+{
+    settings.Model = Model;
+    settings.BindValueTo = "Table.Name";
+    settings.Label = "жопа 42244";
+    settings.Height = 20;
+    settings.Width = 300;
+    settings.OnChange += (sender, newValue) => {
+        //   throw new Exception(newValue.ToString());
+        new System.Threading.Tasks.Task(() => {
+            for (int i = 0; i < 5; i++)
+            {
+                System.Threading.Thread.Sleep(500);
+                Model.Table.Description = "i=" + i;
+            }
+        }).Start();
+    };
+
+})
+<br>
+
+@Html.xInput(settings =>
+{
+    settings.Model = Model;
+    settings.BindValueTo = "Table.Description";
+    settings.Label = "жопа ";
+    settings.Height = 30;
+    settings.Width = 500;
+})*@
+
+@section scripts {
+}
+
