@@ -8,7 +8,7 @@ signalr.bindedValueChangedListeners = [];
 signalr.subscribeModelPropertyChanged = function (modelBindingId, propertyName, callBack) {
   $.connection.hub.start().done(function() {
       $.connection.bindingHub.server.subscribeBindedValueChanged(modelBindingId, propertyName);
-      //console.log('subscribeBindedValueChanged*', modelBindingId, propertyName);
+      //console.log('subscribeBindedValueChanged**', modelBindingId, propertyName);
   });
   signalr.bindedValueChangedListeners.push({ modelBindingId: modelBindingId, propertyName: propertyName, callBack: callBack });
 };
