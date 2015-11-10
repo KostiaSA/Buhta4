@@ -14,12 +14,9 @@ namespace Buhta
         
         public void SendBindedValueChanged(string modelBindingID, string propertyName, string newValue)
         {
-            var obj = App.BindingModelList[modelBindingID];
-            obj.ClientsCaller.Add(Clients.Caller); ? здесь продолжаем
+            BaseModel obj = App.BindingModelList[modelBindingID];
+            Groups.Add(Context.ConnectionId, modelBindingID /*это groupName*/);
 
-            //Type type = obj.GetType();
-            //PropertyInfo prop =   type.GetProperty(propertyName);
-            //prop.SetValue(obj, newValue, null);
             obj.SetPropertyValue(propertyName, newValue);
 
             obj.FireOnChangeByHuman(obj, propertyName, newValue);
@@ -28,19 +25,18 @@ namespace Buhta
 
         public void SendEvent(string modelBindingID, string funcName, dynamic args)
         {
-            var obj = App.BindingModelList[modelBindingID];
+            BaseModel obj = App.BindingModelList[modelBindingID];
+            Groups.Add(Context.ConnectionId, modelBindingID /*это groupName*/);
+
             obj.ClientsCaller.Add(Clients.Caller);
             obj.InvokeMethod(funcName, args);
-
-            //Type type = obj.GetType();
-            //MethodInfo prop = type.GetMethod(funcName);
-            //prop.Invoke(obj, null);
-
         }
 
         public void SubscribeBindedValueChanged(string modelBindingID, string propertyName)
         {
             BaseModel obj = App.BindingModelList[modelBindingID];
+            Groups.Add(Context.ConnectionId, modelBindingID /*это groupName*/);
+
             obj.ClientsCaller.Add(Clients.Caller);
             var _obj =obj.GetPropertyObject(propertyName);
             var lastName = propertyName.Split('.').Last();
@@ -48,7 +44,8 @@ namespace Buhta
             {
                 if (propName == lastName)
                 {
-                    Clients.Caller.receiveBindedValueChanged(modelBindingID, propertyName, newValue);
+                    Clients.Group(modelBindingID).receiveBindedValueChanged(modelBindingID, propertyName, newValue);
+                    //Clients.Caller.receiveBindedValueChanged(modelBindingID, propertyName, newValue);
                 }
             };
         }
