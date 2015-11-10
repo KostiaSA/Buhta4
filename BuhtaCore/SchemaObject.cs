@@ -10,18 +10,14 @@ namespace Buhta
     {
         //public Observable<string> LastName { get { return getVar<string>("LastName"); } }
 
-        [ChangeNotify]
         public Guid ID { get; set; }
 
-        [ChangeNotify]
         public string Name { get; set; }
 
 
-        [ChangeNotify]
         public string Description { get; set; }
 
 
-        [ChangeNotify]
         public int Position { get; set; }
 
 

@@ -19,8 +19,8 @@ namespace Buhta
             Groups.Add(Context.ConnectionId, modelBindingID /*это groupName*/);
 
             obj.SetPropertyValue(propertyName, newValue);
-
             obj.FireOnChangeByBrowser(obj, propertyName, newValue);
+            obj.Update();
 
         }
 
@@ -31,6 +31,7 @@ namespace Buhta
             Groups.Add(Context.ConnectionId, modelBindingID /*это groupName*/);
 
             obj.InvokeMethod(funcName, args);
+            obj.Update();
         }
 
         public void SubscribeBindedValueChanged(string modelBindingID, string propertyName)

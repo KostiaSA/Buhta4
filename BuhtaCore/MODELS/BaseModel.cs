@@ -9,20 +9,17 @@ namespace Buhta
     public class BaseModel : ObservableObject
     {
         public BindingHub Hub;
-        //public HashSet<dynamic> ClientsCaller=new HashSet<dynamic>();
-        //public HashSet<string> BindedProps = new HashSet<string>();
-        public Dictionary<string, string> BindedProps = new Dictionary<string, string>();
-
+        public Dictionary<string, object> BindedProps = new Dictionary<string, object>();
 
         public void Update()
         {
-            var toSend = new Dictionary<string, string>();
+            var toSend = new Dictionary<string, object>();
             foreach (var KeyVP in BindedProps)
             {
                 var propName = KeyVP.Key;
                 var oldValue = KeyVP.Value;
-                var newValue = GetPropertyValue(propName).AsJavaScript();
-                if (oldValue != newValue)
+                var newValue = GetPropertyValue(propName);
+                if (oldValue.AsJavaScript() != newValue.AsJavaScript())
                     toSend.Add(propName, newValue);
             }
 

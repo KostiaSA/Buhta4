@@ -18,14 +18,12 @@ namespace Buhta
         {
             var x = 33;
             Table.Name = "событие 33";
-            SaveButtonDisabled = true;
+            //SaveButtonDisabled = true;
             Update();
         }
 
-        [ChangeNotify]
-        public bool SaveButtonDisabled { get; set; }
+        public bool SaveButtonDisabled { get { return Table.Name == "777"; } }
 
-        [ChangeNotify]
         public string SaveButtonText { get; set; }
     }
 }

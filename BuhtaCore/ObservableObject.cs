@@ -8,16 +8,16 @@ using System.Threading.Tasks;
 namespace Buhta
 {
 
-    [Serializable]
-    public class ChangeNotifyAttribute : LocationInterceptionAspect
-    {
-        public override void OnSetValue(LocationInterceptionArgs args)
-        {
-            ObservableObject obj = (ObservableObject)args.Instance;
-            obj.FireOnChange(obj, args.LocationName, args.Value);
-            base.OnSetValue(args);
-        }
-    }
+    //[Serializable]
+    //public class ChangeNotifyAttribute : LocationInterceptionAspect
+    //{
+    //    public override void OnSetValue(LocationInterceptionArgs args)
+    //    {
+    //        ObservableObject obj = (ObservableObject)args.Instance;
+    //        obj.FireOnChange(obj, args.LocationName, args.Value);
+    //        base.OnSetValue(args);
+    //    }
+    //}
 
     public delegate void ObservableObjectOnChangeEventHandler(ObservableObject sender, string propertyName, object newValue);
 
