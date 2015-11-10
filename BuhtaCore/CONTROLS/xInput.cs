@@ -22,8 +22,8 @@ namespace Buhta
         public string Height_Bind;
 
         public string Text;
-        public string BindTextTo;
-        public string BindOnTextChangeTo;
+        public string Text_Bind;
+        public string Text_OnChange_Bind;
 
         public string Label;
         public string Label_Bind;
@@ -81,8 +81,8 @@ namespace Buhta
             EmitProperty_Bind(Script, Settings.Disabled_Bind, "disabled");
 
             EmitProperty_M(Script, "val", Settings.Text);
-            EmitProperty_Bind2Way_M(Script, Settings.BindTextTo, "val", "change");
-            EmitEvent_Bind(Script, Settings.BindOnTextChangeTo, "change");
+            EmitProperty_Bind2Way_M(Script, Settings.Text_Bind, "val", "change");
+            EmitEvent_Bind(Script, Settings.Text_OnChange_Bind, "change");
 
             //EmitProperty(Script, "label?", Settings.Disabled);
             //EmitProperty_Bind(Script, Settings.Disabled_Bind, "disabled");

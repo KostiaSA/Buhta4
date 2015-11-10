@@ -9,6 +9,9 @@ namespace Buhta
     //[Export(typeof(SchemaObject))]
     public partial class SchemaTable : SchemaObject
     {
+
+        public ObservableCollection<SchemaTableColumn> Columns { get; private set; }
+
         [JsonIgnore]
         public bool IsLogTable;
 
@@ -78,22 +81,27 @@ namespace Buhta
             set { isUserEditable = value; firePropertyChanged("IsUserEditable"); }
         }
 
-        public ObservableCollection<Guid> TableRoles { get; private set; }
-
 
 
         public SchemaTable()
         {
 
-            TableRoles = new ObservableCollection<Guid>();
-            TableRoles.CollectionChanged += TableRoles_CollectionChanged;
+
+            Columns = new ObservableCollection<SchemaTableColumn>();
+            Columns.CollectionChanged += Columns_CollectionChanged;
+
 
         }
 
-        public void Click33()
+        void Columns_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            Description = Guid.NewGuid().ToString();
+            foreach (var column in Columns)
+                if (column.Table == null)
+                    column.Table = this;
+            firePropertyChanged("Columns");
         }
+
+
 
         public override void Validate(StringBuilder error)
         {
@@ -101,10 +109,6 @@ namespace Buhta
 
             if (Name != null && Name.Length > 128)
                 error.AppendLine("Имя таблицы длинее 128 символов.");
-
-            if (TableRoles.Count == 0)
-                error.AppendLine("Не указана ни одна роль таблицы.");
-
 
 
         }

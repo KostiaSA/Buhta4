@@ -14,14 +14,14 @@
             Имя таблицы
         </td>
         <td>
-            @Html.xInput(settings =>
-            {
-                settings.BindTextTo = "Table.Name";
-                settings.Label = "Имя таблицы";
-                settings.Height = 20;
-                settings.Width = 400;
+            @Html.xInput(_ =>
+               {
+                   _.Text_Bind = "Table.Name";
+                   _.Label = "Имя таблицы";
+                   _.Height = 20;
+                   _.Width = 400;
 
-            })
+               })
         </td>
     </tr>
     <tr>
@@ -31,7 +31,7 @@
         <td>
             @Html.xInput(settings =>
             {
-                settings.BindTextTo = "Table.Description";
+                settings.Text_Bind = "Table.Description";
                 settings.Label = "Примечание";
                 settings.Height = 30;
                 settings.Width = 600;
@@ -46,6 +46,33 @@
 {
     settings.Disabled_Bind = nameof(Model.SaveButtonDisabled);
     settings.Text = "Сохранить";
+})
+<br>
+
+@Html.xButton(settings =>
+{
+    settings.OnClick_Bind = nameof(Model.Test1);
+    settings.Text = "Test1";
+})
+<br>
+<br>
+@Html.xGrid(grid =>
+{
+    grid.Width = 700;
+    grid.Height = 400;
+
+    grid.DataSource_Bind = nameof(Model.Table)+"."+ nameof(Model.Table.Columns);
+
+    grid.AddColumn(c => {
+        c.Caption = "Имя";
+        c.Field_Bind = "Name";
+    });
+
+    grid.AddColumn(c =>
+    {
+        c.Caption = "Название";
+        c.Field_Bind = "Description";
+    });
 })
 <br>
 

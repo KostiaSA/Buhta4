@@ -44,8 +44,23 @@ namespace Buhta.Controllers
             {
                 OrgTable = new SchemaTable();
                 OrgTable.ID = Guid.NewGuid();
-                OrgTable.Name = @"Организ""ация";
-                OrgTable.Description = "sprav org справочник орг";
+                OrgTable.Name = @"Организация";
+                OrgTable.Description = "Справочник организаций и контрагентов";
+
+                SchemaTableColumn col;
+
+                col = new SchemaTableColumn(); col.Table = OrgTable; OrgTable.Columns.Add(col);
+                col.Name = "Номер";
+                col.Description = "Номер оганизации";
+
+                col = new SchemaTableColumn(); col.Table = OrgTable; OrgTable.Columns.Add(col);
+                col.Name = "Название";
+                col.Description = "Название оганизации";
+
+                col = new SchemaTableColumn(); col.Table = OrgTable; OrgTable.Columns.Add(col);
+                col.Name = "Город";
+                col.Description = "Родной город оганизации";
+
 
             }
             var model = new SchemaTableEditModel();

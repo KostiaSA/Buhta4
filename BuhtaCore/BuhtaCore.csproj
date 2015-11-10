@@ -113,6 +113,8 @@
   <ItemGroup>
     <Compile Include="App.cs" />
     <Compile Include="ChatHub.cs" />
+    <Compile Include="CONTROLS\xGridColumn.cs" />
+    <Compile Include="CONTROLS\xGrid.cs" />
     <Compile Include="CONTROLS\xControl.cs" />
     <Compile Include="CONTROLS\BindingHub.cs" />
     <Compile Include="CONTROLS\xInput.cs" />
@@ -124,6 +126,7 @@
     <Compile Include="SCHEMA\SchemaObject.cs" />
     <Compile Include="SCHEMA\SchemaObjectEditModel.cs" />
     <Compile Include="SCHEMA\SchemaTable.cs" />
+    <Compile Include="SCHEMA\SchemaTableColumn.cs" />
     <Compile Include="SQL.cs" />
     <Compile Include="TestClass1.cs" />
     <Compile Include="UTILS\SystemClassExtensions.cs" />
