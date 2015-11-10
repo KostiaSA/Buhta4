@@ -8,7 +8,7 @@ namespace Buhta
 {
     public class BaseModel : ObservableObject
     {
-        public HashSet<dynamic> ClientsCaller=new HashSet<dynamic>();
+        //public HashSet<dynamic> ClientsCaller=new HashSet<dynamic>();
         //public HashSet<string> BindedProps = new HashSet<string>();
         public Dictionary<string, string> BindedProps = new Dictionary<string, string>();
 

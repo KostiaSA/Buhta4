@@ -13,17 +13,28 @@ namespace Buhta
     public class xControlSettings
     {
         public BaseModel Model;
-        public bool Visible = true;
-        public bool Enabled = true;
+        //public bool? Visible = true;
+
 
         //public void BindProp(string modelProp, string controlProp);
         //public void BindFunc(string modelFunc, string controlFunc);
 
     }
 
-    public class xControl<T> where T : xControlSettings
+    public class xControl<T> where T : xControlSettings, new()
     {
         public T Settings;
+
+        public xControl(T settings)
+        {
+            Settings = settings;
+        }
+
+        public xControl(Action<T> _settings)
+        {
+            Settings = new T();
+            _settings(Settings);
+        }
 
         //public xControl()
         //{
@@ -50,42 +61,31 @@ namespace Buhta
             Script.AppendLine("tag." + GetJqxName() + "({});");
         }
 
-        public void EmitSetProperty(StringBuilder script, string jqxPropertyName, object value)
+        public void EmitProperty(StringBuilder script, string jqxPropertyName, object value)
         {
             if (value != null)
-                Script.AppendLine("tag." + GetJqxName() + "({"+ jqxPropertyName + ":" + value.AsJavaScript() + "});");
+                Script.AppendLine("tag." + GetJqxName() + "({" + jqxPropertyName + ":" + value.AsJavaScript() + "});");
         }
 
-        //public void EmitSetProperty(StringBuilder script, string jqxPropertyName, int? value)
-        //{
-        //    if (value != null)
-        //        Script.AppendLine("tag." + GetJqxName() + "({" + jqxPropertyName + ":" + value + "});");
-        //}
 
-        public void EmitSetPropertyPx(StringBuilder script, string jqxPropertyName, int? value)
+        public void EmitProperty_Px(StringBuilder script, string jqxPropertyName, int? value)
         {
             if (value != null)
                 Script.AppendLine("tag." + GetJqxName() + "({" + jqxPropertyName + ":'" + value + "px'});");
         }
 
-        //public void EmitSetPropertyM(StringBuilder script, string jqxMethodName, int? value)
-        //{
-        //    if (value != null)
-        //        Script.AppendLine("tag." + jqxMethodName + "("+ value + ");");
-        //}
-
-        public void EmitSetPropertyM(StringBuilder script, string jqxMethodName, object value)
+        public void EmitProperty_M(StringBuilder script, string jqxMethodName, object value)
         {
             if (value != null)
                 Script.AppendLine("tag." + jqxMethodName + "(" + value.AsJavaScript() + ");");
         }
 
 
-        public void EmitBindEvent(StringBuilder script, string modelMethodName, string jqxEventName)
+        public void EmitEvent_Bind(StringBuilder script, string modelMethodName, string jqxEventName)
         {
             if (modelMethodName != null)
             {
-                Script.AppendLine("tag.on('"+ jqxEventName + "',function(event){");
+                Script.AppendLine("tag.on('" + jqxEventName + "',function(event){");
                 Script.AppendLine(" var args={}; if (event) {args=event.args || {}};");
                 Script.AppendLine(" bindingHub.server.sendEvent('" + Settings.Model.BindingId + "','" + modelMethodName + "', args );");
                 Script.AppendLine("});");
@@ -94,16 +94,16 @@ namespace Buhta
 
         }
 
-        public void EmitSubscribeModelPropertyChanged(StringBuilder script, string modelPropertyName, string jqxPropertyName)
+        public void EmitProperty_Bind(StringBuilder script, string modelPropertyName, string jqxPropertyName)
         {
             if (modelPropertyName != null)
             {
-                
+
                 if (!Settings.Model.BindedProps.ContainsKey(modelPropertyName))
                 {
                     Settings.Model.BindedProps.Add(modelPropertyName, Settings.Model.GetPropertyValue(modelPropertyName).AsJavaScript());
                 }
-                script.AppendLine("tag." + GetJqxName() + "({" + jqxPropertyName + ":"+ Settings.Model.BindedProps[modelPropertyName] + "});");
+                script.AppendLine("tag." + GetJqxName() + "({" + jqxPropertyName + ":" + Settings.Model.BindedProps[modelPropertyName] + "});");
                 script.AppendLine("signalr.subscribeModelPropertyChanged('" + Settings.Model.BindingId + "', '" + modelPropertyName + "',function(newValue){");
                 script.AppendLine("    tag." + GetJqxName() + "({" + jqxPropertyName + ":newValue});");
                 script.AppendLine("});");
@@ -111,11 +111,32 @@ namespace Buhta
 
         }
 
-        public void EmitSubscribeModelPropertyChangedM(StringBuilder script, string modelPropertyName, string jqxMethodName)
+        public void EmitProperty_Bind2Way(StringBuilder script, string modelPropertyName, string jqxPropertyName, string jqxEventName)
         {
             if (modelPropertyName != null)
             {
-                //var xx = DataBinder.Eval(Settings.Model, "Table.Name"); 
+
+                if (!Settings.Model.BindedProps.ContainsKey(modelPropertyName))
+                {
+                    Settings.Model.BindedProps.Add(modelPropertyName, Settings.Model.GetPropertyValue(modelPropertyName).AsJavaScript());
+                }
+                script.AppendLine("tag." + GetJqxName() + "({" + jqxPropertyName + ":" + Settings.Model.BindedProps[modelPropertyName] + "});");
+                script.AppendLine("signalr.subscribeModelPropertyChanged('" + Settings.Model.BindingId + "', '" + modelPropertyName + "',function(newValue){");
+                script.AppendLine("    tag." + GetJqxName() + "({" + jqxPropertyName + ":newValue});");
+                script.AppendLine("});");
+
+                script.AppendLine("tag.on('"+jqxEventName+"', function () {");
+                script.AppendLine("    bindingHub.server.sendBindedValueChanged('{{settings.Model.BindingId}}', '{{settings.BindValueTo}}',tag." + GetJqxName() + "('" + jqxPropertyName + "'));");
+                script.AppendLine("}); ");
+
+            }
+
+        }
+
+        public void EmitProperty_Bind_M(StringBuilder script, string modelPropertyName, string jqxMethodName)
+        {
+            if (modelPropertyName != null)
+            {
                 if (!Settings.Model.BindedProps.ContainsKey(modelPropertyName))
                 {
                     Settings.Model.BindedProps.Add(modelPropertyName, Settings.Model.GetPropertyValue(modelPropertyName).AsJavaScript());
@@ -124,6 +145,27 @@ namespace Buhta
                 script.AppendLine("signalr.subscribeModelPropertyChanged('" + Settings.Model.BindingId + "', '" + modelPropertyName + "',function(newValue){");
                 script.AppendLine("    tag." + jqxMethodName + "(newValue);");
                 script.AppendLine("});");
+            }
+
+        }
+
+        public void EmitProperty_Bind2Way_M(StringBuilder script, string modelPropertyName, string jqxMethodName, string jqxEventName)
+        {
+            if (modelPropertyName != null)
+            {
+                if (!Settings.Model.BindedProps.ContainsKey(modelPropertyName))
+                {
+                    Settings.Model.BindedProps.Add(modelPropertyName, Settings.Model.GetPropertyValue(modelPropertyName).AsJavaScript());
+                }
+                script.AppendLine("tag." + jqxMethodName + "(" + Settings.Model.BindedProps[modelPropertyName] + ");");
+                script.AppendLine("signalr.subscribeModelPropertyChanged('" + Settings.Model.BindingId + "', '" + modelPropertyName + "',function(newValue){");
+                script.AppendLine("    tag." + jqxMethodName + "(newValue);");
+                script.AppendLine("});");
+
+                script.AppendLine("tag.on('" + jqxEventName + "', function () {");
+                script.AppendLine("    bindingHub.server.sendBindedValueChanged('" + Settings.Model.BindingId + "', '" + modelPropertyName + "',tag." + jqxMethodName + "()); ");
+                script.AppendLine("}); ");
+
             }
 
         }

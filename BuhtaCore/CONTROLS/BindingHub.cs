@@ -19,7 +19,7 @@ namespace Buhta
 
             obj.SetPropertyValue(propertyName, newValue);
 
-            obj.FireOnChangeByHuman(obj, propertyName, newValue);
+            obj.FireOnChangeByBrowser(obj, propertyName, newValue);
 
         }
 
@@ -28,7 +28,6 @@ namespace Buhta
             BaseModel obj = App.BindingModelList[modelBindingID];
             Groups.Add(Context.ConnectionId, modelBindingID /*это groupName*/);
 
-            obj.ClientsCaller.Add(Clients.Caller);
             obj.InvokeMethod(funcName, args);
         }
 
@@ -37,18 +36,18 @@ namespace Buhta
             BaseModel obj = App.BindingModelList[modelBindingID];
             Groups.Add(Context.ConnectionId, modelBindingID /*это groupName*/);
 
-            obj.ClientsCaller.Add(Clients.Caller);
             var _obj =obj.GetPropertyObject(propertyName);
+
             var lastName = propertyName.Split('.').Last();
             _obj.OnChange += (sender, propName, newValue) =>
             {
                 if (propName == lastName)
                 {
                     Clients.Group(modelBindingID).receiveBindedValueChanged(modelBindingID, propertyName, newValue);
-                    //Clients.Caller.receiveBindedValueChanged(modelBindingID, propertyName, newValue);
                 }
             };
         }
+
         public override Task OnDisconnected(bool stopCalled)
         {
             var xx = 12;

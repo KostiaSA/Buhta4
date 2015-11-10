@@ -29,12 +29,12 @@ namespace Buhta
         {
         }
 
-        public event ObservableObjectOnChangeEventHandler OnChangeByHuman;
+        public event ObservableObjectOnChangeEventHandler OnChangeByBrowser;
 
-        public void FireOnChangeByHuman(ObservableObject sender, string propertyName, object newValue)
+        public void FireOnChangeByBrowser(ObservableObject sender, string propertyName, object newValue)
         {
-            if (OnChangeByHuman != null)
-                OnChangeByHuman(sender, propertyName, newValue);
+            if (OnChangeByBrowser != null)
+                OnChangeByBrowser(sender, propertyName, newValue);
         }
 
         public event ObservableObjectOnChangeEventHandler OnChange;

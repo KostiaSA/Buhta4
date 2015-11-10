@@ -24,12 +24,19 @@ namespace Buhta
 
     public class xButtonSettings : xControlSettings
     {
-        public string Text;
-        public int? Width = 150;
+        public bool? Disabled;
+        public string Disabled_Bind;
+
+        public int? Width;
+        public string Width_Bind;
+
         public int? Height;
-        public string BindTextTo;
-        public string BindOnClickTo;
-        public string BindDisabledTo;
+        public string Height_Bind;
+
+        public string Text;
+        public string Text_Bind;
+
+        public string OnClick_Bind;
 
         //public event xControlOnClickEventHandler<xButton> OnClick;
 
@@ -50,30 +57,40 @@ namespace Buhta
             return "jqxButton";
         }
 
-        public xButton(xButtonSettings settings)
-        {
-            Settings = settings;
-        }
+        public xButton(xButtonSettings settings) : base(settings) { }
+        public xButton(Action<xButtonSettings> settings) : base(settings) { }
 
-        public xButton(Action<xButtonSettings> settings)
-        {
-            Settings = new xButtonSettings();
-            settings(Settings);
-        }
+
+
+        //public xButton(xButtonSettings settings)
+        //{
+        //    Settings = settings;
+        //}
+
+        //public xButton(Action<xButtonSettings> settings)
+        //{
+        //    Settings = new xButtonSettings();
+        //    settings(Settings);
+        //}
 
         public override string GetHtml()
         {
             EmitBeginScript(Script);
 
-            EmitSetPropertyM(Script, "val", Settings.Text);
+            EmitProperty_Px(Script, "width", Settings.Width);
+            EmitProperty_Bind(Script, Settings.Width_Bind, "width");
 
-            EmitSetPropertyPx(Script, "width", Settings.Width);
+            EmitProperty_Px(Script, "height", Settings.Height);
+            EmitProperty_Bind(Script, Settings.Height_Bind, "height");
 
-            EmitBindEvent(Script, Settings.BindOnClickTo, "click");
+            EmitProperty(Script, "disabled", Settings.Disabled);
+            EmitProperty_Bind(Script, Settings.Disabled_Bind, "disabled");
 
-            EmitSubscribeModelPropertyChanged(Script, Settings.BindDisabledTo, "disabled");
 
-            EmitSubscribeModelPropertyChangedM(Script, Settings.BindTextTo, "val");
+            EmitProperty_M(Script, "val", Settings.Text);
+            EmitProperty_Bind_M(Script, Settings.Text_Bind, "val");
+
+            EmitEvent_Bind(Script, Settings.OnClick_Bind, "click");
 
             Html.Append("<input type='button'  id='" + UniqueId + "'/>");
 

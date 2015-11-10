@@ -12,10 +12,19 @@ namespace Buhta
 {
     public class xInputSettings: xControlSettings
     {
-        public string Label;
-        public string BindValueTo;
-        public int Width;
-        public int Height;
+        public bool? Disabled;
+        public string Disabled_Bind;
+
+        public int? Width;
+        public string Width_Bind;
+
+        public int? Height;
+        public string Height_Bind;
+
+        public string Text;
+        public string BindTextTo;
+        public string BindOnTextChangeTo;
+
         public event InputControlOnChangeEventHandler OnChange;
 
         public void FireOnChange(xInput sender, object newValue)
@@ -45,70 +54,85 @@ namespace Buhta
 
     public class xInput : xControl<xInputSettings>
     {
-        xInputSettings settings;
-        public xInput(xInputSettings _settings)
+        public override string GetJqxName()
         {
-            settings = _settings;
+            return "jqxInput";
         }
-        public xInput(Action<xInputSettings> _settings)
-        {
-            settings = new xInputSettings();
-            _settings(settings);
-        }
+
+        public xInput(xInputSettings settings) : base(settings) { }
+        public xInput(Action<xInputSettings> settings) : base(settings) { }
+
 
         public override string GetHtml()
         {
-            var script = @"
-<script>
-    $(document).ready(function() {
-        var countries = new Array('Россия', ""Армения"", 'Algeria', 'Andorra', 'Angola');
-        var tag=$('#{{id}}');
-        tag.jqxInput({ placeHolder: 'Enter a Country', height: {{settings.Height}}, width: {{settings.Width}}, minLength: 1,  source: countries, value: {{{value}}} });
+            EmitBeginScript(Script);
 
-        tag.on('change', function () { 
-            //var value = $('#{{id}}').val(); alert('Ok');
-            bindingHub.server.sendBindedValueChanged('{{settings.Model.BindingId}}', '{{settings.BindValueTo}}',tag.val());
 
-            });
+            EmitProperty_Px(Script, "width", Settings.Width);
+            EmitProperty_Bind(Script, Settings.Width_Bind, "width");
 
-            bindingHub.client.receiveBindedValueChanged = function (modelBindingID, propertyName, newValue) {
-               if (modelBindingID=='{{settings.Model.BindingId}}' && propertyName=='{{settings.BindValueTo}}'){
-                 tag.val(newValue);
-                //alert('Ok-'+name+' '+message);
-               };
-            }; 
+            EmitProperty_Px(Script, "height", Settings.Height);
+            EmitProperty_Bind(Script, Settings.Height_Bind, "height");
 
-        $.connection.hub.start().done(function () {
-            bindingHub.server.subscribeBindedValueChanged('{{settings.Model.BindingId}}', '{{settings.BindValueTo}}');
+            EmitProperty(Script, "disabled", Settings.Disabled);
+            EmitProperty_Bind(Script, Settings.Disabled_Bind, "disabled");
 
-        });
+            EmitProperty_M(Script, "val", Settings.Text);
+            EmitProperty_Bind2Way_M(Script, Settings.BindTextTo, "val", "change");
+            EmitEvent_Bind(Script, Settings.BindOnTextChangeTo, "change");
 
-    });
-</script>
-   ";
-            settings.Model.OnChangeByHuman += (sender, propertyName, newValue) =>
-            {
-                if (propertyName == settings.BindValueTo)
-                    settings.FireOnChange(this, newValue);
-            };
+            Html.Append("<input type='text'  id='" + UniqueId + "'/>");
 
-            //Type type = settings.Model.GetType();
-            //PropertyInfo prop = type.GetProperty(settings.BindValueTo);
-            //var value= HttpUtility.JavaScriptStringEncode(prop.GetValue(settings.Model).ToString(), true);
-            var value= HttpUtility.JavaScriptStringEncode(settings.Model.GetPropertyValue(settings.BindValueTo).ToString(), true);
+            return base.GetHtml();
 
-            script = Render.StringToString(script, new { id = UniqueId, settings = settings, value= value});
-
-            var tag = @"<input type = 'text' id = '{{id}}' />";
-            tag = Render.StringToString(tag, new { id = UniqueId });
-
-            return tag + script;
         }
 
-        private void InputControl_OnChange(xInput sender, string newValue)
-        {
-            throw new NotImplementedException();
-        }
+//        public string GetHtml_old()
+//        {
+//            var script = @"
+//<script>
+//    $(document).ready(function() {
+//        var countries = new Array('Россия', ""Армения"", 'Algeria', 'Andorra', 'Angola');
+//        var tag=$('#{{id}}');
+//        tag.jqxInput({ placeHolder: 'Enter a Country', height: {{settings.Height}}, width: {{settings.Width}}, minLength: 1,  source: countries, value: {{{value}}} });
+
+//        tag.on('change', function () { 
+//            //var value = $('#{{id}}').val(); alert('Ok');
+//            bindingHub.server.sendBindedValueChanged('{{settings.Model.BindingId}}', '{{settings.BindValueTo}}',tag.val());
+
+//            });
+
+//            bindingHub.client.receiveBindedValueChanged = function (modelBindingID, propertyName, newValue) {
+//               if (modelBindingID=='{{settings.Model.BindingId}}' && propertyName=='{{settings.BindValueTo}}'){
+//                 tag.val(newValue);
+//                //alert('Ok-'+name+' '+message);
+//               };
+//            }; 
+
+//        $.connection.hub.start().done(function () {
+//            bindingHub.server.subscribeBindedValueChanged('{{settings.Model.BindingId}}', '{{settings.BindValueTo}}');
+
+//        });
+
+//    });
+//</script>
+//   ";
+//            settings.Model.OnChangeByHuman += (sender, propertyName, newValue) =>
+//            {
+//                if (propertyName == settings.BindValueTo)
+//                    settings.FireOnChange(this, newValue);
+//            };
+
+//            var value= HttpUtility.JavaScriptStringEncode(settings.Model.GetPropertyValue(settings.BindValueTo).ToString(), true);
+
+//            script = Render.StringToString(script, new { id = UniqueId, settings = settings, value= value});
+
+//            var tag = @"<input type = 'text' id = '{{id}}' />";
+//            tag = Render.StringToString(tag, new { id = UniqueId });
+
+//            return tag + script;
+//        }
+
 
 
     }

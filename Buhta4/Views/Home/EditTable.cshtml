@@ -12,8 +12,8 @@
 {
     settings.Model = Model;
     //settings.Text = "Сохранить таблу";
-    settings.BindTextTo = nameof(Model.SaveButtonText);
-    settings.BindDisabledTo = nameof(Model.SaveButtonDisabled);
+    settings.Text_Bind = nameof(Model.SaveButtonText);
+    settings.Disabled_Bind = nameof(Model.SaveButtonDisabled);
 })
 <br>
 @Html.xButton(settings =>
@@ -21,23 +21,31 @@
     settings.Model = Model;
     settings.Text = "Жопа баттон 2";
     settings.Width = 200;
-    settings.BindOnClickTo = "Table.Click33";
-    settings.BindDisabledTo = nameof(Model.SaveButtonDisabled);
+    settings.OnClick_Bind = "Table.Click33";
+    settings.Disabled_Bind = nameof(Model.SaveButtonDisabled);
 })
 <br>
 @Html.xButton(settings =>
 {
     settings.Model = Model;
     settings.Text = "Жопа баттон 3";
-    settings.BindOnClickTo = "SaveButtonClick";
+    settings.OnClick_Bind = nameof(Model.SaveButtonClick);
+})
+
+<br>
+@Html.xButton(settings =>
+{
+    settings.Model = Model;
+    settings.Disabled=true;
+    settings.Text = "disabled-XX";
 })
 <br>
 
-@*@Html.xInput(settings =>
+@Html.xInput(settings =>
 {
     settings.Model = Model;
-    settings.BindValueTo = "Table.Name";
-    settings.Label = "жопа 42244";
+    settings.BindTextTo = "Table.Name";
+    //settings.Label = "жопа 42244";
     settings.Height = 20;
     settings.Width = 300;
     settings.OnChange += (sender, newValue) => {
@@ -57,11 +65,11 @@
 @Html.xInput(settings =>
 {
     settings.Model = Model;
-    settings.BindValueTo = "Table.Description";
-    settings.Label = "жопа ";
+    settings.BindTextTo = "Table.Description";
+    //settings.Label = "жопа ";
     settings.Height = 30;
     settings.Width = 500;
-})*@
+})
 
 @section scripts {
 }
