@@ -17,7 +17,7 @@ namespace Buhta
         public void SaveButtonClick(dynamic args)
         {
             var x = 33;
-            Table.Name = "событие 33";
+            Table.Description = Table.Description+"+";
             //SaveButtonDisabled = true;
             Update();
         }

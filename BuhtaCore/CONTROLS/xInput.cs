@@ -10,7 +10,7 @@ using System.Web.Mvc;
 
 namespace Buhta
 {
-    public class xInputSettings: xControlSettings
+    public class xInputSettings : xControlSettings
     {
         public bool? Disabled;
         public string Disabled_Bind;
@@ -39,13 +39,13 @@ namespace Buhta
     {
         public static MvcHtmlString xInput(this HtmlHelper helper, xInputSettings settings)
         {
-            return new MvcHtmlString(new xInput(settings).GetHtml());
+            return new MvcHtmlString(new xInput(helper.ViewData.Model, settings).GetHtml());
         }
 
         public static MvcHtmlString xInput(this HtmlHelper helper, Action<xInputSettings> settings)
         {
 
-            return new MvcHtmlString(new xInput(settings).GetHtml());
+            return new MvcHtmlString(new xInput(helper.ViewData.Model, settings).GetHtml());
         }
 
     }
@@ -59,8 +59,8 @@ namespace Buhta
             return "jqxInput";
         }
 
-        public xInput(xInputSettings settings) : base(settings) { }
-        public xInput(Action<xInputSettings> settings) : base(settings) { }
+        public xInput(object model, xInputSettings settings) : base(model, settings) { }
+        public xInput(object model, Action<xInputSettings> settings) : base(model, settings) { }
 
 
         public override string GetHtml()
@@ -87,51 +87,51 @@ namespace Buhta
 
         }
 
-//        public string GetHtml_old()
-//        {
-//            var script = @"
-//<script>
-//    $(document).ready(function() {
-//        var countries = new Array('Россия', ""Армения"", 'Algeria', 'Andorra', 'Angola');
-//        var tag=$('#{{id}}');
-//        tag.jqxInput({ placeHolder: 'Enter a Country', height: {{settings.Height}}, width: {{settings.Width}}, minLength: 1,  source: countries, value: {{{value}}} });
+        //        public string GetHtml_old()
+        //        {
+        //            var script = @"
+        //<script>
+        //    $(document).ready(function() {
+        //        var countries = new Array('Россия', ""Армения"", 'Algeria', 'Andorra', 'Angola');
+        //        var tag=$('#{{id}}');
+        //        tag.jqxInput({ placeHolder: 'Enter a Country', height: {{settings.Height}}, width: {{settings.Width}}, minLength: 1,  source: countries, value: {{{value}}} });
 
-//        tag.on('change', function () { 
-//            //var value = $('#{{id}}').val(); alert('Ok');
-//            bindingHub.server.sendBindedValueChanged('{{settings.Model.BindingId}}', '{{settings.BindValueTo}}',tag.val());
+        //        tag.on('change', function () { 
+        //            //var value = $('#{{id}}').val(); alert('Ok');
+        //            bindingHub.server.sendBindedValueChanged('{{settings.Model.BindingId}}', '{{settings.BindValueTo}}',tag.val());
 
-//            });
+        //            });
 
-//            bindingHub.client.receiveBindedValueChanged = function (modelBindingID, propertyName, newValue) {
-//               if (modelBindingID=='{{settings.Model.BindingId}}' && propertyName=='{{settings.BindValueTo}}'){
-//                 tag.val(newValue);
-//                //alert('Ok-'+name+' '+message);
-//               };
-//            }; 
+        //            bindingHub.client.receiveBindedValueChanged = function (modelBindingID, propertyName, newValue) {
+        //               if (modelBindingID=='{{settings.Model.BindingId}}' && propertyName=='{{settings.BindValueTo}}'){
+        //                 tag.val(newValue);
+        //                //alert('Ok-'+name+' '+message);
+        //               };
+        //            }; 
 
-//        $.connection.hub.start().done(function () {
-//            bindingHub.server.subscribeBindedValueChanged('{{settings.Model.BindingId}}', '{{settings.BindValueTo}}');
+        //        $.connection.hub.start().done(function () {
+        //            bindingHub.server.subscribeBindedValueChanged('{{settings.Model.BindingId}}', '{{settings.BindValueTo}}');
 
-//        });
+        //        });
 
-//    });
-//</script>
-//   ";
-//            settings.Model.OnChangeByHuman += (sender, propertyName, newValue) =>
-//            {
-//                if (propertyName == settings.BindValueTo)
-//                    settings.FireOnChange(this, newValue);
-//            };
+        //    });
+        //</script>
+        //   ";
+        //            settings.Model.OnChangeByHuman += (sender, propertyName, newValue) =>
+        //            {
+        //                if (propertyName == settings.BindValueTo)
+        //                    settings.FireOnChange(this, newValue);
+        //            };
 
-//            var value= HttpUtility.JavaScriptStringEncode(settings.Model.GetPropertyValue(settings.BindValueTo).ToString(), true);
+        //            var value= HttpUtility.JavaScriptStringEncode(settings.Model.GetPropertyValue(settings.BindValueTo).ToString(), true);
 
-//            script = Render.StringToString(script, new { id = UniqueId, settings = settings, value= value});
+        //            script = Render.StringToString(script, new { id = UniqueId, settings = settings, value= value});
 
-//            var tag = @"<input type = 'text' id = '{{id}}' />";
-//            tag = Render.StringToString(tag, new { id = UniqueId });
+        //            var tag = @"<input type = 'text' id = '{{id}}' />";
+        //            tag = Render.StringToString(tag, new { id = UniqueId });
 
-//            return tag + script;
-//        }
+        //            return tag + script;
+        //        }
 
 
 

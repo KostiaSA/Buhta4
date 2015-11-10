@@ -11,13 +11,13 @@ namespace Buhta
     {
         public static MvcHtmlString xButton(this HtmlHelper helper, xButtonSettings settings)
         {
-            return new MvcHtmlString(new xButton(settings).GetHtml());
+            return new MvcHtmlString(new xButton(helper.ViewData.Model, settings).GetHtml());
         }
 
         public static MvcHtmlString xButton(this HtmlHelper helper, Action<xButtonSettings> settings)
         {
 
-            return new MvcHtmlString(new xButton(settings).GetHtml());
+            return new MvcHtmlString(new xButton(helper.ViewData.Model, settings).GetHtml());
         }
 
     }
@@ -57,8 +57,8 @@ namespace Buhta
             return "jqxButton";
         }
 
-        public xButton(xButtonSettings settings) : base(settings) { }
-        public xButton(Action<xButtonSettings> settings) : base(settings) { }
+        public xButton(object model, xButtonSettings settings) : base(model, settings) { }
+        public xButton(object model, Action<xButtonSettings> settings) : base(model, settings) { }
 
 
 
@@ -95,7 +95,7 @@ namespace Buhta
             Html.Append("<input type='button'  id='" + UniqueId + "'/>");
 
             return base.GetHtml();
-    }
+        }
 
-}
+    }
 }
