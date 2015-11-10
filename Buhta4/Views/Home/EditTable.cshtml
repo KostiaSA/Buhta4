@@ -5,65 +5,49 @@
     ViewBag.Title = "EditTable";
 }
 
-<h2>EditTable @Model.Table.Name</h2>
+<h2>Таблица:  @Model.EditedObjectName</h2>
 
 
-@Html.xButton(settings =>
-{
-    //settings.Text = "Сохранить таблу";
-    settings.Text_Bind = nameof(Model.SaveButtonText);
-    settings.Disabled_Bind = nameof(Model.SaveButtonDisabled);
-})
-<br>
-@Html.xButton(settings =>
-{
-    settings.Text = "Жопа баттон 2";
-    settings.Width = 200;
-    settings.OnClick_Bind = "Table.Click33";
-    settings.Disabled_Bind = nameof(Model.SaveButtonDisabled);
-})
-<br>
-@Html.xButton(settings =>
-{
-    settings.Text = "Жопа баттон 3";
-    settings.OnClick_Bind = nameof(Model.SaveButtonClick);
-})
-
-<br>
-@Html.xButton(settings =>
-{
-    settings.Disabled=true;
-    settings.Text = "disabled-XX";
-})
-<br>
-
-@Html.xInput(settings =>
-{
-    settings.BindTextTo = "Table.Name";
-    //settings.Label = "жопа 42244";
-    settings.Height = 20;
-    settings.Width = 300;
-    settings.OnChange += (sender, newValue) => {
-        //   throw new Exception(newValue.ToString());
-        new System.Threading.Tasks.Task(() => {
-            for (int i = 0; i < 5; i++)
+<table>
+    <tr>
+        <td>
+            Имя таблицы
+        </td>
+        <td>
+            @Html.xInput(settings =>
             {
-                System.Threading.Thread.Sleep(500);
-                Model.Table.Description = "i=" + i;
-            }
-        }).Start();
-    };
+                settings.BindTextTo = "Table.Name";
+                settings.Label = "Имя таблицы";
+                settings.Height = 20;
+                settings.Width = 400;
 
+            })
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Примечание
+        </td>
+        <td>
+            @Html.xInput(settings =>
+            {
+                settings.BindTextTo = "Table.Description";
+                settings.Label = "Примечание";
+                settings.Height = 30;
+                settings.Width = 600;
+            })
+        </td>
+    </tr>
+</table>
+
+
+<br>
+@Html.xButton(settings =>
+{
+    settings.Disabled_Bind = nameof(Model.SaveButtonDisabled);
+    settings.Text = "Сохранить";
 })
 <br>
-
-@Html.xInput(settings =>
-{
-    settings.BindTextTo = "Table.Description";
-    //settings.Label = "жопа ";
-    settings.Height = 30;
-    settings.Width = 500;
-})
 
 @section scripts {
 }

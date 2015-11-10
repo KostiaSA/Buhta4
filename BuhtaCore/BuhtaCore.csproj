@@ -121,8 +121,9 @@
     <Compile Include="MODELS\SchemaTableEditModel.cs" />
     <Compile Include="ObservableObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SchemaObject.cs" />
-    <Compile Include="SchemaTable.cs" />
+    <Compile Include="SCHEMA\SchemaObject.cs" />
+    <Compile Include="SCHEMA\SchemaObjectEditModel.cs" />
+    <Compile Include="SCHEMA\SchemaTable.cs" />
     <Compile Include="SQL.cs" />
     <Compile Include="TestClass1.cs" />
     <Compile Include="UTILS\SystemClassExtensions.cs" />

@@ -25,6 +25,9 @@ namespace Buhta
         public string BindTextTo;
         public string BindOnTextChangeTo;
 
+        public string Label;
+        public string Label_Bind;
+
         public event InputControlOnChangeEventHandler OnChange;
 
         public void FireOnChange(xInput sender, object newValue)
@@ -80,6 +83,9 @@ namespace Buhta
             EmitProperty_M(Script, "val", Settings.Text);
             EmitProperty_Bind2Way_M(Script, Settings.BindTextTo, "val", "change");
             EmitEvent_Bind(Script, Settings.BindOnTextChangeTo, "change");
+
+            //EmitProperty(Script, "label?", Settings.Disabled);
+            //EmitProperty_Bind(Script, Settings.Disabled_Bind, "disabled");
 
             Html.Append("<input type='text'  id='" + UniqueId + "'/>");
 
