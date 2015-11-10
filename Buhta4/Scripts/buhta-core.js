@@ -13,15 +13,27 @@ signalr.subscribeModelPropertyChanged = function (modelBindingId, propertyName, 
   signalr.bindedValueChangedListeners.push({ modelBindingId: modelBindingId, propertyName: propertyName, callBack: callBack });
 };
 
-$.connection.bindingHub.client.receiveBindedValueChanged = function (modelBindingId, propertyName, newValue) {
+//$.connection.bindingHub.client.receiveBindedValueChanged = function (modelBindingId, propertyName, newValue) {
+//    //console.log('receiveBindedValueChanged', modelBindingId, propertyName, newValue);
+//    for (var i = 0; i < signalr.bindedValueChangedListeners.length; i++) {
+//        var listener=signalr.bindedValueChangedListeners[i];
+//        if (listener.modelBindingId == modelBindingId && listener.propertyName == propertyName) {
+//            listener.callBack(newValue);
+//            //console.log('receiveBindedValueChanged.callBack', modelBindingId, propertyName, newValue);
+//        }
+//    }
+//};
+
+$.connection.bindingHub.client.receiveBindedValuesChanged = function (modelBindingId, values) {
     //console.log('receiveBindedValueChanged', modelBindingId, propertyName, newValue);
     for (var i = 0; i < signalr.bindedValueChangedListeners.length; i++) {
-        var listener=signalr.bindedValueChangedListeners[i];
-        if (listener.modelBindingId == modelBindingId && listener.propertyName == propertyName) {
-            listener.callBack(newValue);
+        var listener = signalr.bindedValueChangedListeners[i];
+        if (listener.modelBindingId == modelBindingId) {
+            if (values.hasOwnProperty(listener.propertyName)) {
+                listener.callBack(values[listener.propertyName]);
+            }
             //console.log('receiveBindedValueChanged.callBack', modelBindingId, propertyName, newValue);
         }
     }
 };
-
 
