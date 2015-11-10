@@ -83,6 +83,22 @@ namespace Buhta
             EmitProperty(Script, "disabled", Settings.Disabled);
             EmitProperty_Bind(Script, Settings.Disabled_Bind, "disabled");
 
+
+
+            Script.AppendLine("var columns=[];");
+            Script.AppendLine("var col;");
+            foreach (var col in Settings.Columns)
+            {
+                Script.AppendLine("col={};");
+                if (col.Caption != null)
+                    Script.AppendLine("col.text=" + col.Caption.AsJavaScript() + ";");
+                if (col.Field_Bind != null)
+                    Script.AppendLine("col.displayfield=" + col.Field_Bind.AsJavaScript() + ";");
+                Script.AppendLine("columns.push(col);");
+            }
+            Script.AppendLine("tag." + GetJqxName() + "({columns:columns});");
+
+
             Html.Append("<div id='" + UniqueId + "'/>");
 
             return base.GetHtml();
