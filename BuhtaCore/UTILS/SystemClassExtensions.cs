@@ -10,6 +10,8 @@ using System.Security.Cryptography;
 using System.Drawing;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Web.UI.WebControls;
+using System.Reflection;
+using System.Diagnostics;
 
 namespace Buhta
 {
@@ -107,15 +109,29 @@ namespace Buhta
     {
         public static string GetFullMessage(this Exception e)
         {
+            var info = new StringBuilder();
+
+            var st = new StackTrace(e, true);
+            var frame = st.GetFrame(0);
+            var line = frame.GetFileLineNumber();
+            info.AppendLine(st.ToString());
+
             string msg = e.Message;
             e = e.InnerException;
             while (e != null)
             {
                 msg += "\n" + e.Message;
+
+                st = new StackTrace(e, true);
+                frame = st.GetFrame(0);
+                line = frame.GetFileLineNumber();
+
                 e = e.InnerException;
             }
 
-            return msg;
+
+
+            return msg + "\n\n" + info.ToString();
         }
     }
     public static class StringExtention
@@ -696,7 +712,7 @@ namespace Buhta
             if (value is Double)
                 return ((Double)value).AsJavaScript();
             //if (value is DateTime)
-              //  return ((DateTime)value).AsSQL_DateAndTime();
+            //  return ((DateTime)value).AsSQL_DateAndTime();
             if (value is Guid)
                 return ((Guid)value).AsJavaScript();
             if (value is float)
@@ -704,7 +720,7 @@ namespace Buhta
             if (value is bool)
                 return ((bool)value) ? "true" : "false";
 
-            throw new Exception("Object."+nameof(AsJavaScript) +"(): неизвестный класс '" + value.GetType().FullName + "'");
+            throw new Exception("Object." + nameof(AsJavaScript) + "(): неизвестный класс '" + value.GetType().FullName + "'");
         }
 
         public static byte[] AsSerializedImage(this Object value)
@@ -735,6 +751,24 @@ namespace Buhta
                 return null;
             else
                 return (Guid)value;
+        }
+
+        public static object EvalPropertyValue(this Object obj, string propName)
+        {
+            var names = propName.Split('.');
+            for (int i = 0; i < names.Length; i++)
+            {
+                Type _type = obj.GetType();
+                PropertyInfo _prop = _type.GetProperty(names[i]);
+                if (_prop == null)
+                    throw new Exception("model." + nameof(EvalPropertyValue) + ": не найдено свойство '" + names[i] + "' в '" + propName + "'");
+                obj = _prop.GetValue(obj);
+                if (obj == null)
+                    return null;
+                if (i == names.Length - 1)
+                    return obj;
+            }
+            return null;
         }
     }
 

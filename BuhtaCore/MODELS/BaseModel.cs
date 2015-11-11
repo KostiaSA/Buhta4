@@ -18,17 +18,84 @@ namespace Buhta
             {
                 var propName = KeyVP.Key;
                 var oldValue = KeyVP.Value;
-                var newValue = GetPropertyValue(propName);
-                if (oldValue.AsJavaScript() != newValue.AsJavaScript())
-                    toSend.Add(propName, newValue);
+                if (!(oldValue is IEnumerable<object>))
+                {
+                    var newValue = GetPropertyValue(propName);
+                    if (oldValue.AsJavaScript() != newValue.AsJavaScript())
+                        toSend.Add(propName, newValue);
+                }
             }
 
             foreach (var KeyVP in toSend)
-              BindedProps[KeyVP.Key] = KeyVP.Value;
+                BindedProps[KeyVP.Key] = KeyVP.Value;
 
             if (toSend.Keys.Count > 0)
                 Hub.Clients.Group(BindingId).receiveBindedValuesChanged(BindingId, toSend);
         }
+
+
+        public List<object[]> EnumerableToJSArray(IEnumerable<object> source, string _fieldNames)
+        {
+            var list = new List<object[]>();
+            var fieldNames = _fieldNames.Split(',');
+
+            foreach (var row in source)
+            {
+                var row_array = new object[fieldNames.Length];
+                for (int i = 0; i < fieldNames.Length; i++)
+                {
+                    row_array[i] = row.EvalPropertyValue(fieldNames[i]);
+                }
+                list.Add(row_array);
+            }
+
+            return list;
+        }
+
+        public void UpdateCollection(string propName, string fieldNames)
+        {
+
+            object newValue = GetPropertyValue(propName);
+            if (!(newValue is IEnumerable<object>))
+                throw new Exception(nameof(UpdateCollection) + ": " + propName + " должен быть IEnumerable");
+
+            var toSend = EnumerableToJSArray((IEnumerable<object>)newValue, fieldNames);
+
+            Hub.Clients.Group(BindingId).receiveBindedValueChanged(BindingId, propName, toSend);
+
+            if (BindedProps.ContainsKey(propName))
+                BindedProps[propName] = newValue;
+            else
+                BindedProps.Add(propName, newValue);
+
+        }
+
+
+        //public void UpdateGridDataSource(xGridSettings grid)
+        //{
+        //    var propName = grid.DataSource_Bind;
+        //    object oldValue;
+        //    if (BindedProps.ContainsKey(propName))
+        //        oldValue = BindedProps[propName];
+
+        //    object newValue = GetPropertyValue(propName);
+        //    if (!(newValue is IEnumerable<object>))
+        //        throw new Exception(nameof(UpdateGridDataSource)+": "+ propName+" должен быть IEnumerable");
+
+        //    List<string> fieldNames = new List<string>();
+        //    foreach (var col in grid.Columns)
+        //        fieldNames.Add(col.Field_Bind);
+
+        //    var toSend = EnumerableToJSArray((IEnumerable<object>)newValue, fieldNames);
+
+        //    Hub.Clients.Group(BindingId).receiveBindedValuesChanged(BindingId, toSend);
+
+        //    if (BindedProps.ContainsKey(propName))
+        //        BindedProps[propName] = newValue;
+        //    else
+        //        BindedProps.Add(propName, newValue);
+
+        //}
 
         string bindingId;
         public string BindingId

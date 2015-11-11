@@ -12,7 +12,13 @@ namespace Buhta
         public void Test1(dynamic args)
         {
             Table.Name = "Жопа";
-            Hub.Clients.Group(BindingId).receiveBindedValuesChanged(BindingId, "Table.Columns");
+
+            var arr = new List<string[]>();
+            arr.Add(new string[] { "бухта"," воронеж"});
+            arr.Add(new string[] { "бухта-сбп", "питер" });
+            arr.Add(new string[] { "дом", "москва","париж" });
+
+            Hub.Clients.Group(BindingId).receiveBindedValuesChanged(BindingId, arr);
 
         }
     }

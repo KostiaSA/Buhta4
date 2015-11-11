@@ -5,56 +5,85 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Diagnostics;
 
 namespace Buhta
 {
 
     public class BindingHub : Hub
     {
-        
+
         public void SendBindedValueChanged(string modelBindingID, string propertyName, string newValue)
         {
-            BaseModel obj = App.BindingModelList[modelBindingID];
-            obj.Hub = this;
-            Groups.Add(Context.ConnectionId, modelBindingID /*это groupName*/);
 
-            obj.SetPropertyValue(propertyName, newValue);
-            obj.FireOnChangeByBrowser(obj, propertyName, newValue);
-            obj.Update();
+            try
+            {
+                BaseModel obj = App.BindingModelList[modelBindingID];
+                obj.Hub = this;
+                Groups.Add(Context.ConnectionId, modelBindingID /*это groupName*/);
+
+                obj.SetPropertyValue(propertyName, newValue);
+                obj.FireOnChangeByBrowser(obj, propertyName, newValue);
+                obj.Update();
+            }
+            catch (Exception e)
+            {
+                Clients.Caller.receiveServerError(e.GetFullMessage());
+            }
 
         }
 
         public void SendEvent(string modelBindingID, string funcName, dynamic args)
         {
-            BaseModel obj = App.BindingModelList[modelBindingID];
-            obj.Hub = this;
-            Groups.Add(Context.ConnectionId, modelBindingID /*это groupName*/);
+            try
+            {
+                BaseModel obj = App.BindingModelList[modelBindingID];
+                obj.Hub = this;
+                Groups.Add(Context.ConnectionId, modelBindingID /*это groupName*/);
 
-            obj.InvokeMethod(funcName, args);
-            obj.Update();
+                obj.InvokeMethod(funcName, args);
+                obj.Update();
+            }
+            catch (Exception e)
+            {
+                Clients.Caller.receiveServerError(e.GetFullMessage());
+            }
+        }
+
+        public void SendGridDataSourceRequest(string modelBindingID, string propName, string fieldNames)
+        {
+            try
+            {
+                BaseModel obj = App.BindingModelList[modelBindingID];
+                obj.Hub = this;
+                Groups.Add(Context.ConnectionId, modelBindingID /*это groupName*/);
+
+                obj.UpdateCollection(propName, fieldNames);
+            }
+            catch (Exception e)
+            {
+                Clients.Caller.receiveServerError(e.GetFullMessage());
+            }
         }
 
         public void SubscribeBindedValueChanged(string modelBindingID, string propertyName)
         {
-            BaseModel obj = App.BindingModelList[modelBindingID];
-            obj.Hub = this;
-            Groups.Add(Context.ConnectionId, modelBindingID /*это groupName*/);
+            try
+            {
+                BaseModel obj = App.BindingModelList[modelBindingID];
+                obj.Hub = this;
+                Groups.Add(Context.ConnectionId, modelBindingID /*это groupName*/);
+            }
+            catch (Exception e)
+            {
+                Clients.Caller.receiveServerError(e.GetFullMessage());
+            }
 
-            //var _obj =obj.GetPropertyObject(propertyName);
-
-            //var lastName = propertyName.Split('.').Last();
-            //_obj.OnChange += (sender, propName, newValue) =>
-            //{
-            //    if (propName == lastName)
-            //    {
-            //        Clients.Group(modelBindingID).receiveBindedValueChanged(modelBindingID, propertyName, newValue);
-            //    }
-            //};
         }
 
         public override Task OnDisconnected(bool stopCalled)
         {
-            return base.OnDisconnected(stopCalled); 
+            return base.OnDisconnected(stopCalled);
         }
         public override Task OnConnected()
         {

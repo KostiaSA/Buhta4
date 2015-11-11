@@ -45,6 +45,37 @@ namespace Buhta
             columns.Add(col);
         }
 
+        public void EmitDataSource_Bind(StringBuilder script, BaseModel model)
+        {
+            if (DataSource_Bind != null)
+            {
+                if (!model.BindedProps.ContainsKey(DataSource_Bind))
+                {
+                    model.BindedProps.Add(DataSource_Bind, model.GetPropertyValue(DataSource_Bind));
+                }
+                //script.AppendLine("tag." + jqxMethodName + "(" + Model.BindedProps[DataSource_Bind] + ");");
+                script.AppendLine("signalr.subscribeModelPropertyChanged('" + model.BindingId + "', " + DataSource_Bind.AsJavaScript() + ",function(newDataArray){");
+                //script.AppendLine("    tag.jqxGrid(newValue);");
+                script.AppendLine("  source.localdata=newDataArray;");
+                script.AppendLine("  tag.jqxGrid('updatebounddata');");
+                script.AppendLine("});");
+
+
+                var fieldNames = "";
+                foreach (var col in Columns)
+                    fieldNames += col.Field_Bind + ",";
+                fieldNames = fieldNames.WithOutLastChar();
+
+                script.AppendLine("$.connection.hub.start().done(function() {");
+                script.AppendLine("  $.connection.bindingHub.server.sendGridDataSourceRequest('" + model.BindingId + "', " + DataSource_Bind.AsJavaScript() + ","+ fieldNames.AsJavaScript() + ");");
+                script.AppendLine("});");
+
+
+            }
+
+        }
+
+
     }
 
     public class xGrid : xControl<xGridSettings>
@@ -72,6 +103,37 @@ namespace Buhta
 
         public override string GetHtml()
         {
+            //            Script.AppendLine(@"
+            //            var source =
+            //                        {
+            //                localdata: [
+            //                    [""Alfreds Futterkiste"", ""Maria Anders"", ""Sales Representative"", ""Obere Str. 57"", ""Berlin"", ""Germany""]
+            //                ],
+            //                datafields: [
+            //                    { name: 'CompanyName', type: 'string', map: '0'},
+            //                    { name: 'ContactName', type: 'string', map: '1' },
+            //                    { name: 'Title', type: 'string', map: '2' },
+            //                    { name: 'Address', type: 'string', map: '3' },
+            //                    { name: 'City', type: 'string', map: '4' },
+            //                    { name: 'Country', type: 'string', map: '5' }
+            //                ],
+            //                datatype: 'array'
+            //            };
+            //            var dataAdapter = new $.jqx.dataAdapter(source);
+
+            //            $('#" + UniqueId + @"').jqxGrid(
+            //            {
+            //                width: 850,
+            //                columns: [
+            //                  { text: 'Company Name', datafield: 'CompanyName', width: 200 },
+            //                  { text: 'Contact Name', datafield: 'ContactName', width: 150 },
+            //                  { text: 'Contact Title', datafield: 'Title', width: 100 },
+            //                  { text: 'Address', datafield: 'Address', width: 100 },
+            //                  { text: 'City', datafield: 'City', width: 100 },
+            //                  { text: 'Country', datafield: 'Country' }
+            //                ]
+            //            });
+            //");
             EmitBeginScript(Script);
 
             EmitProperty_Px(Script, "width", Settings.Width);
@@ -93,16 +155,38 @@ namespace Buhta
                 if (col.Caption != null)
                     Script.AppendLine("col.text=" + col.Caption.AsJavaScript() + ";");
                 if (col.Field_Bind != null)
-                    Script.AppendLine("col.displayfield=" + col.Field_Bind.AsJavaScript() + ";");
+                    Script.AppendLine("col.datafield=" + col.Field_Bind.AsJavaScript() + ";");
                 Script.AppendLine("columns.push(col);");
             }
-            Script.AppendLine("tag." + GetJqxName() + "({columns:columns});");
+
+            Script.AppendLine("var fields=[];");
+            var index = 0;
+            foreach (var col in Settings.Columns)
+            {
+                col.EmitDataField(Script, index++);
+            }
+
+            Script.AppendLine("var source={localdata:[], datatype:'array', datafields:fields};");
+
+            Script.AppendLine("var dataAdapter=new $.jqx.dataAdapter(source);");
+            Script.AppendLine("tag." + GetJqxName() + "({columns:columns, source:dataAdapter});");
+
+
+
+            Settings.EmitDataSource_Bind(Script, Model);
+
+            //            Script.AppendLine("tag." + GetJqxName() + "('refreshdata');");
+            //            Script.AppendLine("tag." + GetJqxName() + "('refresh');");
+            //Script.AppendLine(@"source.localdata=[[""жопа0"",""жопа1"",""жопа2""],[""жопа0"",""жопа1"",""жопа2""]];");
+            //Script.AppendLine("tag." + GetJqxName() + "('updatebounddata');");
 
 
             Html.Append("<div id='" + UniqueId + "'/>");
 
             return base.GetHtml();
         }
+
+
 
     }
 }

@@ -13,16 +13,16 @@ signalr.subscribeModelPropertyChanged = function (modelBindingId, propertyName, 
   signalr.bindedValueChangedListeners.push({ modelBindingId: modelBindingId, propertyName: propertyName, callBack: callBack });
 };
 
-//$.connection.bindingHub.client.receiveBindedValueChanged = function (modelBindingId, propertyName, newValue) {
-//    //console.log('receiveBindedValueChanged', modelBindingId, propertyName, newValue);
-//    for (var i = 0; i < signalr.bindedValueChangedListeners.length; i++) {
-//        var listener=signalr.bindedValueChangedListeners[i];
-//        if (listener.modelBindingId == modelBindingId && listener.propertyName == propertyName) {
-//            listener.callBack(newValue);
-//            //console.log('receiveBindedValueChanged.callBack', modelBindingId, propertyName, newValue);
-//        }
-//    }
-//};
+$.connection.bindingHub.client.receiveBindedValueChanged = function (modelBindingId, propertyName, newValue) {
+    //console.log('receiveBindedValueChanged', modelBindingId, propertyName, newValue);
+    for (var i = 0; i < signalr.bindedValueChangedListeners.length; i++) {
+        var listener=signalr.bindedValueChangedListeners[i];
+        if (listener.modelBindingId == modelBindingId && listener.propertyName == propertyName) {
+            listener.callBack(newValue);
+            //console.log('receiveBindedValueChanged.callBack', modelBindingId, propertyName, newValue);
+        }
+    }
+};
 
 $.connection.bindingHub.client.receiveBindedValuesChanged = function (modelBindingId, values) {
     //console.log('receiveBindedValueChanged', modelBindingId, propertyName, newValue);
@@ -36,4 +36,10 @@ $.connection.bindingHub.client.receiveBindedValuesChanged = function (modelBindi
         }
     }
 };
+
+$.connection.bindingHub.client.receiveServerError = function (error) {
+    console.error(error);
+    $("body").html("<p style='color:red;padding-left: 10px;'>" + error.replace(/\n/g, '<br/>') + "</p>").css("color:red");
+};
+
 
