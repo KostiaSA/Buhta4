@@ -154,6 +154,19 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Areas\BuhtaCore\App.cs" />
+    <Compile Include="Areas\BuhtaCore\BuhtaCoreAreaRegistration.cs" />
+    <Compile Include="Areas\BuhtaCore\CODE\CONTROLS\BindingHub.cs" />
+    <Compile Include="Areas\BuhtaCore\CODE\CONTROLS\xButton.cs" />
+    <Compile Include="Areas\BuhtaCore\CODE\CONTROLS\xControl.cs" />
+    <Compile Include="Areas\BuhtaCore\CODE\CONTROLS\xGrid.cs" />
+    <Compile Include="Areas\BuhtaCore\CODE\CONTROLS\xGridColumn.cs" />
+    <Compile Include="Areas\BuhtaCore\CODE\CONTROLS\xInput.cs" />
+    <Compile Include="Areas\BuhtaCore\CODE\RenderView.cs" />
+    <Compile Include="Areas\BuhtaCore\Models\BaseModel.cs" />
+    <Compile Include="Areas\BuhtaCore\Models\SchemaObjectEditModel.cs" />
+    <Compile Include="Areas\BuhtaCore\Models\SchemaTableColumnEditModel.cs" />
+    <Compile Include="Areas\BuhtaCore\Models\SchemaTableEditModel.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -466,6 +479,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Areas\BuhtaCore\Views\web.config" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\buhta-core.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -579,11 +593,14 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\Chat.cshtml" />
     <Content Include="Views\Home\EditTable.cshtml" />
-    <Content Include="Views\Shared\BuhtaCore\TableColumnEditorWindow.cshtml" />
+    <Content Include="Views\Shared\TableColumnEditorWindow.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Areas\BuhtaCore\Controllers\" />
+    <Folder Include="Areas\BuhtaCore\Views\Shared\" />
     <Folder Include="Models\" />
+    <Folder Include="Views\Shared\BuhtaCore\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

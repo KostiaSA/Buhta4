@@ -6,9 +6,5 @@ using System.Threading.Tasks;
 
 namespace Buhta
 {
-    public static class App
-    {
-        public static Dictionary<string, BaseModel> BindingModelList = new Dictionary<string, BaseModel>();
 
-    }
 }
