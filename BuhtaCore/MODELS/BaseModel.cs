@@ -10,6 +10,7 @@ namespace Buhta
     {
         public BindingHub Hub;
         public Dictionary<string, object> BindedProps = new Dictionary<string, object>();
+        public Dictionary<string, object> BindedCollections = new Dictionary<string, object>();
 
         public void Update()
         {
@@ -52,6 +53,26 @@ namespace Buhta
             return list;
         }
 
+        // используется при изменении "collection"
+        public void UpdateCollection(string propName)
+        {
+            var result = false;
+            foreach (var key in BindedCollections.Keys.ToList())
+            {
+                var param = key.Split('\t');
+                if (propName == param[0])
+                {
+                    var fieldNames = param[1];
+                    UpdateCollection(propName, fieldNames);
+                    result = true;
+                }
+            }
+            if (!result)
+                throw new Exception("Model." + nameof(UpdateCollection) + ": не найден набор данных '" + propName + "'");
+        }
+
+
+        // используется при первой загрузке "collection" в grid-у
         public void UpdateCollection(string propName, string fieldNames)
         {
 
@@ -63,10 +84,10 @@ namespace Buhta
 
             Hub.Clients.Group(BindingId).receiveBindedValueChanged(BindingId, propName, toSend);
 
-            if (BindedProps.ContainsKey(propName))
-                BindedProps[propName] = newValue;
+            if (BindedCollections.ContainsKey(propName + "\t" + fieldNames))
+                BindedCollections[propName + "\t" + fieldNames] = newValue;
             else
-                BindedProps.Add(propName, newValue);
+                BindedCollections.Add(propName + "\t" + fieldNames, newValue);
 
         }
 

@@ -52,14 +52,17 @@ namespace Buhta.Controllers
                 col = new SchemaTableColumn(); col.Table = OrgTable; OrgTable.Columns.Add(col);
                 col.Name = "Номер";
                 col.Description = "Номер оганизации";
+                col.Position = 1;
 
                 col = new SchemaTableColumn(); col.Table = OrgTable; OrgTable.Columns.Add(col);
                 col.Name = "Название";
                 col.Description = "Название оганизации";
+                col.Position = 2;
 
                 col = new SchemaTableColumn(); col.Table = OrgTable; OrgTable.Columns.Add(col);
                 col.Name = "Город";
                 col.Description = "Родной город оганизации";
+                col.Position = 1010;
 
 
             }
