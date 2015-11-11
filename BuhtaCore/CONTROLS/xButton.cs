@@ -11,12 +11,13 @@ namespace Buhta
     {
         public static MvcHtmlString xButton(this HtmlHelper helper, xButtonSettings settings)
         {
+            (helper.ViewData.Model as BaseModel).Helper = helper;
             return new MvcHtmlString(new xButton(helper.ViewData.Model, settings).GetHtml());
         }
 
         public static MvcHtmlString xButton(this HtmlHelper helper, Action<xButtonSettings> settings)
         {
-
+            (helper.ViewData.Model as BaseModel).Helper = helper;
             return new MvcHtmlString(new xButton(helper.ViewData.Model, settings).GetHtml());
         }
 

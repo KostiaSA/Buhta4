@@ -11,7 +11,7 @@
 <table>
     <tr>
         <td>
-            Имя таблицы 22 
+            Имя таблицы 226
         </td>
         <td>
             @Html.xInput(_ =>
@@ -53,6 +53,12 @@
 {
     settings.OnClick_Bind = nameof(Model.Test1ButtonClick);
     settings.Text = "Test1";
+})
+<br>
+@Html.xButton(settings =>
+{
+    settings.OnClick_Bind = nameof(Model.EditFirstColumnButtonClick);
+    settings.Text = "Редактировать первую колонку";
 })
 <br>
 <br>

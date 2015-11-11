@@ -120,6 +120,7 @@
     <Compile Include="CONTROLS\xInput.cs" />
     <Compile Include="CONTROLS\xButton.cs" />
     <Compile Include="MODELS\BaseModel.cs" />
+    <Compile Include="MODELS\SchemaTableColumnEditModel.cs" />
     <Compile Include="MODELS\SchemaTableEditModel.cs" />
     <Compile Include="ObservableObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

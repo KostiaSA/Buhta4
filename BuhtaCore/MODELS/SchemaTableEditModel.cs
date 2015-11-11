@@ -9,6 +9,15 @@ namespace Buhta
     {
         public SchemaTable Table { get { return EditedObject; } }
 
+        public void EditFirstColumnButtonClick(dynamic args)
+        {
+            var model = new SchemaTableColumnEditModel();
+            model.Column = Table.Columns[0];
+
+//            var xxx = RenderPartialViewToString(@"C:\Buhta4Git\Buhta4\Buhta4\Views\Shared\BuhtaCore\TableColumnEditorWindow1.cshtml", model);
+            var xxx = RenderPartialViewToString(@"TableColumnEditorWindow", model);
+        }
+
         public void Test1ButtonClick(dynamic args)
         {
             Table.Name = "Жопа";
@@ -20,7 +29,7 @@ namespace Buhta
             col.Description = "давай!";
 
 
-            UpdateCollection(nameof(Table)+"."+nameof(Table.Columns));
+            UpdateCollection(nameof(Table) + "." + nameof(Table.Columns));
 
             //var arr = new List<string[]>();
             //arr.Add(new string[] { "бухта"," воронеж"});

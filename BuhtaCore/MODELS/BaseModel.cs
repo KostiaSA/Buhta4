@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Web;
+using System.Web.Mvc;
+using System.Web.Mvc.Html;
 
 namespace Buhta
 {
     public class BaseModel : ObservableObject
     {
+        public HtmlHelper Helper;
         public BindingHub Hub;
         public Dictionary<string, object> BindedProps = new Dictionary<string, object>();
         public Dictionary<string, object> BindedCollections = new Dictionary<string, object>();
@@ -252,5 +256,31 @@ namespace Buhta
             }
         }
 
+        public string RenderPartialViewToString(string viewName, object model)
+        {
+
+            var xx=PartialExtensions.Partial(Helper, viewName, model);
+            return null;
+          //  Helper.H
+
+          //  //if (string.IsNullOrEmpty(viewName))
+          //  //  viewName = ControllerContext.RouteData.GetRequiredString("action");
+
+          //  //ViewDataDictionary ViewData = new ViewDataDictionary();
+          //  //ViewData.Model = model;
+
+          //  ControllerContext controllerContext = new ControllerContext();
+          //  controllerContext.RouteData=Helper.RouteCollection[0];
+          ////  controllerContext.RouteData = new System.Web.Routing.RouteData();
+
+          //  using (StringWriter sw = new StringWriter())
+          //  {
+          //      ViewEngineResult viewResult = ViewEngines.Engines.FindPartialView(controllerContext, viewName);
+          //      ViewContext viewContext = new ViewContext(controllerContext, viewResult.View, ViewData, null /*TempData*/, sw);
+          //      viewResult.View.Render(viewContext, sw);
+
+          //      return sw.GetStringBuilder().ToString();
+          //  }
+        }
     }
 }
